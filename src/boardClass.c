@@ -11,24 +11,22 @@ Board  *new_board(int fd){
   Board *bd = NULL;
   int rd = 0;
   char buf[READ_SIZE];
-  char *line = NULL;
-  char *tmp = NULL;
-  int index = 0;
+  //char *line = NULL;
+  //char *tmp = NULL;
+  //int index = 0;
 
   bd = (Board *)malloc(sizeof(Board));
   if (bd){
-    while (rd = read(fd, buf, READ_SIZE)){
+    while ((rd = read(fd, buf, READ_SIZE))){
       buf[rd] = '\0';
-      tmp = my_strjoin(line, buf);
-      free(line);
-      line = tmp;
-      free(tmp);
-      if (has_new_line(buf))
-        break;
+      //tmp = my_strjoin(line, buf);
+      //free(line);
+      //line = tmp;
+      //free(tmp);
+      //if (has_new_line(buf))
+        //break;
     }
   }
     
-  }
-
   return bd;
 }
