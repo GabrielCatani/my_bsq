@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
-#define BUFF_SIZE 23
+#define BUFF_SIZE 7
 
 int  my_strlen(char *str){
     int len = 0;
@@ -96,15 +96,22 @@ char *my_strdup(char *str)
 void  add_to_line(char **line, char *buf){
     int i = 0;
     char *to_line = NULL;
+    char *tmp = NULL;
 
     while (buf[i] != '\0' && buf[i] != '\n')
         i++;
-    
-    if (!(*line))
-        to_line = my_strsub(buf, 0, i);
-    else
-        to_line = my_strjoin((*line), buf);
-    
+
+
+    to_line = my_strsub(buf, 0, i);
+    if ((*line))
+    {
+        tmp = to_line;
+        to_line = my_strjoin((*line), tmp);
+        free(*line);
+        *line = NULL;
+        free(tmp);
+        tmp = NULL;
+    }   
     *line = to_line;   
 }
 
@@ -133,10 +140,9 @@ char *my_readline(int fd){
     while ((rd = read(fd, buf, BUFF_SIZE))){
         buf[rd] = '\0';
         add_to_line(&line, buf);
-        printf("%s\n", line);
+
         if (ptr = my_strchr(buf, '\n')){
             line_remainder = my_strdup(ptr);
-            printf("aqui man %s", ptr);
             break;
         }
     }
@@ -147,7 +153,10 @@ char *my_readline(int fd){
 int  main(){
     int fd = 0;
     fd = open("./test", O_RDONLY);
-    printf("%s\n", my_readline(fd));
-
+    char *line = NULL;
+    line = my_readline(fd);
+    printf("%s\n", line);
+    free(line);
+    
     return 0;
 }
