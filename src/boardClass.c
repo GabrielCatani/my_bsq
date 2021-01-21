@@ -1,21 +1,18 @@
 #include "../includes/my_bsq.h"
 #include "../includes/utils.h"
 
-/*
-    TO-DO: create has_new_line function;
-    TO-DO: create my_strjoin funciton;
-    TO-DO: create my_atoi function;
-    TO-DO: test print number of lines from file
-*/ 
-Board  *new_board(int fd){
-  Board *bd = NULL;
-
-  bd = (Board *)malloc(sizeof(Board));
+Board  new_board(int fd){
+  Board bd;
   char *line = NULL;
+  bd = (Board)malloc(sizeof(boardObj));
+  
   if (bd){
       line = my_readline(fd);
-      printf("nbr lines: %d\n", atoi(line));
+      bd->nbr_lines = atoi(line);
       free(line);
+      while ((line = my_readline(fd))){
+          
+      }
   }      
     
   return bd;

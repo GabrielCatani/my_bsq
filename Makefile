@@ -36,9 +36,11 @@ $(OBJS_UTILS_PATH)%.o:$(UTILS_PATH)%.c
 	@echo "\033[32mGenerating \033[32;1m$@\033[32;0m\033[32m binary."
 
 clean:
-	@/bin/rm -rf $(OBJS_SRCS_PATH) $($(OBJS_UTILS_PATH))
+	@/bin/rm -rf $(OBJS_SRCS_PATH) $(OBJS_UTILS_PATH)
 	@echo "\033[32mRemoving all binaries..."
 
 fclean: clean
 	@/bin/rm -rf $(TARGET)
 	@echo "\033[32mRemoving executable binary \033[32;1m$(TARGET)\033[32;0m\033[32m..."
+
+re: fclean $(TARGET)

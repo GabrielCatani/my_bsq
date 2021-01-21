@@ -6,7 +6,7 @@ int  main(int argc, char **argv)
   if (argc == 2){
     fd = open(argv[1], O_RDONLY);
     if (fd){
-      Board *bd = NULL;
+      Board bd;
       bd = new_board(fd);
       if (bd){
         //find_biggest_square(&bd);
