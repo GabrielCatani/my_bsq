@@ -1,10 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/uio.h>
-#include <unistd.h>
-#define BUFF_SIZE 7
+#include "../includes/my_bsq.h"
+#include "../includes/utils.h"
+
+#define BUFF_SIZE 10
 
 int  my_strlen(char *str){
     int len = 0;
@@ -46,10 +43,10 @@ char *my_strjoin(char *s1, char *s2)
         return NULL;
  
     while (*s1)
-        result[i++] = *s1++;
- 
- 	while (*s2)
- 	    result[i++] = *s2++;
+      result[i++] = *s1++;
+ 	
+    while (*s2)
+      result[i++] = *s2++;
  
  	result[i] = '\0';
  
@@ -112,7 +109,7 @@ void  add_to_line(char **line, char *buf){
         free(tmp);
         tmp = NULL;
     }   
-    *line = to_line;   
+    *line = to_line;
 }
 
 void my_strclr(char **str)
@@ -130,7 +127,6 @@ char *my_readline(int fd){
     char *line = NULL;
     char *ptr = NULL;
     int rd = 0;
-    int i = 0;
 
     if (line_remainder){
         line = my_strdup(line_remainder);
@@ -141,22 +137,11 @@ char *my_readline(int fd){
         buf[rd] = '\0';
         add_to_line(&line, buf);
 
-        if (ptr = my_strchr(buf, '\n')){
+        if ((ptr = my_strchr(buf, '\n'))){
             line_remainder = my_strdup(ptr);
             break;
         }
     }
 
     return line;
-}
-
-int  main(){
-    int fd = 0;
-    fd = open("./test", O_RDONLY);
-    char *line = NULL;
-    line = my_readline(fd);
-    printf("%s\n", line);
-    free(line);
-    
-    return 0;
 }

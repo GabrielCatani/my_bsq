@@ -1,5 +1,5 @@
 #include "../includes/my_bsq.h"
-#define READ_SIZE 10
+#include "../includes/utils.h"
 
 /*
     TO-DO: create has_new_line function;
@@ -9,24 +9,14 @@
 */ 
 Board  *new_board(int fd){
   Board *bd = NULL;
-  int rd = 0;
-  char buf[READ_SIZE];
-  //char *line = NULL;
-  //char *tmp = NULL;
-  //int index = 0;
 
   bd = (Board *)malloc(sizeof(Board));
+  char *line = NULL;
   if (bd){
-    while ((rd = read(fd, buf, READ_SIZE))){
-      buf[rd] = '\0';
-      //tmp = my_strjoin(line, buf);
-      //free(line);
-      //line = tmp;
-      //free(tmp);
-      //if (has_new_line(buf))
-        //break;
-    }
-  }
+      line = my_readline(fd);
+      printf("nbr lines: %d\n", atoi(line));
+      free(line);
+  }      
     
   return bd;
 }

@@ -13,6 +13,8 @@ int  main(int argc, char **argv)
         //print_board(bd);
         //delete_board(bd);
       }
+        free(bd);
+        bd = NULL;
       close(fd);
     }
   }
