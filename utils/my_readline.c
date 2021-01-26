@@ -1,13 +1,23 @@
 #include "../includes/my_bsq.h"
 #include "../includes/utils.h"
 
-#define BUFF_SIZE 10
+#define BUFF_SIZE 150
 
 int  my_strlen(char *str){
     int len = 0;
     if (!str)
         return len;
     while (str[len] != '\0')
+        len++;
+    
+    return len;
+}
+
+int  my_strlen_new_line(char *str){
+    int len = 0;
+    if (!str)
+        return len;
+    while (str[len] != '\0' && str[len] != '\n')
         len++;
     
     return len;
@@ -98,7 +108,6 @@ void  add_to_line(char **line, char *buf){
     while (buf[i] != '\0' && buf[i] != '\n')
         i++;
 
-
     to_line = my_strsub(buf, 0, i);
     if ((*line))
     {
@@ -129,8 +138,10 @@ char *my_readline(int fd){
     int rd = 0;
 
     if (line_remainder){
-        line = my_strdup(line_remainder);
-        my_strclr(&line_remainder);
+        line = my_strsub(line_remainder, 0, my_strlen_new_line(line_remainder + 1) + 1);
+        ptr = my_strchr(line_remainder + 1, '\n');
+        //my_strclr(&line_remainder);
+        line_remainder = ptr;
     }
 
     while ((rd = read(fd, buf, BUFF_SIZE))){
@@ -145,3 +156,18 @@ char *my_readline(int fd){
 
     return line;
 }
+
+/*
+int main(int ac, char **av)
+{
+    int fd = open(av[1], O_RDONLY);
+    char *line = NULL;
+    while ((line = my_readline(fd))){
+        printf("%s", line);
+    }
+
+    free(line);
+    line = NULL;
+    close(fd);
+}
+*/
