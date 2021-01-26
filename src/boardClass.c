@@ -21,14 +21,16 @@ Board  new_board(int fd){
       
       i = 0;
       int j = 0;
-      line = my_readline(fd);
-      while (j < 10){
-          if (line[j] == '\n' || line[j] == 'o')
-            bd->board[i][j] = 0;
-        else
-            bd->board[i][j] = 1;
-          j++;
+      //int index = 0;
+      
+      while ((line = my_readline(fd))){
+          printf("%s\n", line);
+          free(line);
+          line = NULL;
       }
+      free(line);
+      line = NULL;
+      
 
     
       i = 0;

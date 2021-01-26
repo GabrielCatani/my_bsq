@@ -1,82 +1,36 @@
 #include "../includes/my_bsq.h"
 #include "../includes/utils.h"
 
-#define BUFF_SIZE 150
-
-int  my_strlen(char *str){
+#define READLINE_READ_SIZE 150
+int my_strlen(char *s)
+{
     int len = 0;
-    if (!str)
-        return len;
-    while (str[len] != '\0')
-        len++;
-    
-    return len;
-}
 
-int  my_strlen_new_line(char *str){
-    int len = 0;
-    if (!str)
-        return len;
-    while (str[len] != '\0' && str[len] != '\n')
-        len++;
-    
+    if (!s)
     return len;
-}
-
-char *my_strsub(char *str, int start, int len){
-    char *ptr;
-    int i;
- 
-    ptr = (char *)malloc(sizeof(char) * (len + 1));
-    if (!ptr || !str)
-        return NULL;
- 
-    str = str + start;
-    i = 0;
-    while (i < len)
-    {
-        ptr[i] = str[i];
-        i++;
-    }
- 
-    ptr[i] = '\0';
-    return ptr;
+    while (s[len])
+    len++;
+    return len;
 }
 
 char *my_strjoin(char *s1, char *s2)
 {
     int i = 0;
     char *result;
- 
+
     result = (char *)malloc(sizeof(char) * (my_strlen(s1) + my_strlen(s2)) + 1);
     if (!result || !s1 || !s2)
-        return NULL;
- 
-    while (*s1)
-      result[i++] = *s1++;
- 	
-    while (*s2)
-      result[i++] = *s2++;
- 
- 	result[i] = '\0';
- 
- 	return result;
- }
-
-char *my_strchr(char *str, char c)
-{
-    int len = 0;
-    char *ptr = str;
- 
-    len = my_strlen(str) + 1;
-    while(len--)
-    {
-        if (*ptr == c)
-            return ptr;
-        ptr++;
-    }
- 
     return NULL;
+
+    while (*s1)
+    result[i++] = *s1++;
+
+while (*s2)
+    result[i++] = *s2++;
+
+result[i] = '\0';
+
+return result;
 }
 
 char *my_strdup(char *str)
@@ -99,26 +53,41 @@ char *my_strdup(char *str)
     return cpy_str;
 }
 
+char *my_strsub(char *str, int start, int len)
+{
+    char *ptr;
+    int i;
 
-void  add_to_line(char **line, char *buf){
-    int i = 0;
-    char *to_line = NULL;
-    char *tmp = NULL;
+    ptr = (char *)malloc(sizeof(char) * (len + 1));
+    if (!ptr || !str)
+        return NULL;
 
-    while (buf[i] != '\0' && buf[i] != '\n')
-        i++;
-
-    to_line = my_strsub(buf, 0, i);
-    if ((*line))
+    str = str + start;
+    i = 0;
+    while (i < len)
     {
-        tmp = to_line;
-        to_line = my_strjoin((*line), tmp);
-        free(*line);
-        *line = NULL;
-        free(tmp);
-        tmp = NULL;
-    }   
-    *line = to_line;
+        ptr[i] = str[i];
+        i++;
+    }
+
+    ptr[i] = '\0';
+    return ptr;
+}
+
+char *my_strchr(char *str, char c)
+{
+    int len = 0;
+    char *ptr = str;
+
+    len = my_strlen(str) + 1;
+    while(len--)
+    {
+        if (*ptr == c)
+            return ptr;
+        ptr++;
+    }
+
+    return NULL;
 }
 
 void my_strclr(char **str)
@@ -130,44 +99,84 @@ void my_strclr(char **str)
     }
 }
 
-char *my_readline(int fd){
-    static char *line_remainder;
-    char buf[BUFF_SIZE + 1];
-    char *line = NULL;
-    char *ptr = NULL;
-    int rd = 0;
-
-    if (line_remainder){
-        line = my_strsub(line_remainder, 0, my_strlen_new_line(line_remainder + 1) + 1);
-        ptr = my_strchr(line_remainder + 1, '\n');
-        //my_strclr(&line_remainder);
-        line_remainder = ptr;
-    }
-
-    while ((rd = read(fd, buf, BUFF_SIZE))){
-        buf[rd] = '\0';
-        add_to_line(&line, buf);
-
-        if ((ptr = my_strchr(buf, '\n'))){
-            line_remainder = my_strdup(ptr);
-            break;
-        }
-    }
-
-    return line;
-}
-
-/*
-int main(int ac, char **av)
+void read_and_save(int fd, char **line)
 {
-    int fd = open(av[1], O_RDONLY);
-    char *line = NULL;
-    while ((line = my_readline(fd))){
-        printf("%s", line);
+    int rd = 0;
+    char buf[READLINE_READ_SIZE + 1];
+    char *tmp = NULL;
+
+    while ((rd = read(fd, buf, READLINE_READ_SIZE)))
+    {
+        if (rd == -1)
+            break;
+        buf[rd] = '\0';
+        if (*line)
+        {
+            tmp = my_strjoin(*line, buf);
+            free(*line);
+            *line = tmp;
+        }
+        else
+            *line = my_strdup(buf);
+
+        if (my_strchr(*line, '\n'))
+            break;
+    }
+}
+
+char *output_line(char **line, int len)
+{
+    char *result = NULL;
+    char *tmp = NULL;
+
+    if ((*line)[len] == '\n')
+    {
+        result = my_strsub((*line), 0, len);
+        tmp = my_strdup(&(*line)[len + 1]);
+        free(*line);
+        *line = tmp;
+        if ((*(*line)) == '\0')
+        my_strclr(line);
+    }
+    else
+    {
+        result = my_strdup(*line);
+        my_strclr(line);
     }
 
-    free(line);
-    line = NULL;
-    close(fd);
+    return result;
 }
-*/
+
+int line_len(char **line)
+{
+    int len = 0;
+
+    if (*line)
+    {
+    while ((*line)[len] != '\n' && (*line)[len] != '\0')
+        len++;
+    }
+    else
+    return -1;
+
+    return len;
+}
+
+char *my_readline(int fd)
+{
+    static char *line[100];
+    int len = 0;
+    char *result = NULL; 
+
+    if (fd < 0)
+        return NULL;
+    
+    read_and_save(fd, line);
+
+    if ((len = line_len(line)) < 0)
+        return NULL;
+
+    result = output_line(line, len);
+
+    return result;
+}
