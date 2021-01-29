@@ -83,8 +83,26 @@ void print_board(Board bd){
     }
 }
 
-/*
+
 void find_biggest_square(Board bd){
+    int i = 1;
+    int j = 1;
+    int min = 0;
+    while (i < bd->nbr_lines){
+        j = 1;
+        while (j < bd->nbr_lines){
+            min = bd->board[i - 1][j];
+            if (bd->board[i - 1][j] < min)
+                min = bd->board[i - 1][j];
+            else if (bd->board[i][j - 1] < min)
+                min = bd->board[i][j - 1];
+            else if (bd->board[i -1][j -1] < min)
+                min = bd->board[i -1][j -1];
+            if (bd->board[i][j] != 0)
+                bd->board[i][j] = min + 1;
+            j++;
+        }
+        i++;
+    }
 
 }
-*/

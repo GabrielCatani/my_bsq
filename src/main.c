@@ -9,8 +9,11 @@ int  main(int argc, char **argv)
       Board bd;
       bd = new_board(fd);
       if (bd){
-        find_biggest_square(bd);
         print_board(bd);
+        find_biggest_square(bd);
+        printf("\n");
+        print_board(bd);
+        //print_biggest_square(bd);
         delete_board(bd);
       }
       close(fd);
