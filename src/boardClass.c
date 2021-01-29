@@ -75,7 +75,12 @@ void print_board(Board bd){
     while (index < bd->nbr_lines){
       element_index = 0;
       while(element_index < bd->nbr_lines){
-        printf("%d", bd->board[index][element_index]);
+        if (bd->board[index][element_index] == 120)
+            printf("x");
+        else if (bd->board[index][element_index] == 0)
+            printf("o");
+        else
+            printf(".");
         element_index++;
       }
       printf("\n");
@@ -83,11 +88,24 @@ void print_board(Board bd){
     }
 }
 
+int add_one_bitwise(int nbr, int one){
 
-void find_biggest_square(Board bd){
+
+    while (one != 0){
+        int carry = nbr & one;
+        nbr = nbr ^ one;
+        one = carry << 1;
+    }
+
+    return nbr;
+}
+
+
+int find_biggest_square(Board bd){
     int i = 1;
     int j = 1;
     int min = 0;
+    int max = 0;
     while (i < bd->nbr_lines){
         j = 1;
         while (j < bd->nbr_lines){
@@ -99,10 +117,50 @@ void find_biggest_square(Board bd){
             else if (bd->board[i -1][j -1] < min)
                 min = bd->board[i -1][j -1];
             if (bd->board[i][j] != 0)
-                bd->board[i][j] = min + 1;
+                bd->board[i][j] = add_one_bitwise(min, 1);
+            if (bd->board[i][j] > max)
+                max = bd->board[i][j];
+            j++;
+        }
+        i++;
+    }
+    return max;
+}
+
+void print_biggest_square(Board board, int big_square_size){
+    int i = 1;
+    int j = 1;
+    int found = 0;
+    while (i < board->nbr_lines){
+        if (found)
+          break;
+        j = 1;
+        while (j < board->nbr_lines){
+            if (board->board[i][j] == big_square_size){
+                found = 1;
+                break;
+            }
             j++;
         }
         i++;
     }
 
+    int counter = big_square_size;
+    int index = 0;
+    j++;
+    i--;
+    int column = j;
+    while (index < big_square_size){
+        counter = big_square_size;
+        j = column;
+        while (counter > 0){
+            board->board[i][j] = 'x';
+            counter--;
+            j--;
+        }
+        i--;
+        index++;
+    }
+
+    print_board(board);
 }

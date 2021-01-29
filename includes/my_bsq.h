@@ -12,7 +12,8 @@ typedef struct boardObj {
 }boardObj;
 typedef struct boardObj* Board;
 Board new_board(int fd);
-void find_biggest_square(Board board);
+int find_biggest_square(Board board);
+void print_biggest_square(Board board, int big_square_size);
 void print_board(Board board);
 void delete_board(Board bd);
 Board fill_board(Board bd, int fd);
